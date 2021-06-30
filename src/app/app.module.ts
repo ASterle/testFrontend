@@ -8,11 +8,15 @@ import {AppRoutingModule} from './app-routing.module';
 import {FilesModule} from "./components/files/files.module";
 import {NavBarComponent} from './components/nav-bar/nav-bar.component';
 import {ImagesModule} from "./components/images/images.module";
+import {HomeComponent} from './components/home/home.component';
+import {ErrorComponent} from './components/error/error.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavBarComponent
+    NavBarComponent,
+    HomeComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
