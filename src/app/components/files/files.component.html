@@ -3,9 +3,9 @@
 
 <div class="file-upload">
 
-  <ul>
-    <li *ngFor="let fileName of fileNames">
-      {{fileName || "No file uploaded yet."}}
+  <ul class="list-group">
+    <li class="list-group-item col-6" *ngFor="let file of (files$ | async)">
+      {{file.fileName || "No file uploaded yet."}}
     </li>
   </ul>
 
