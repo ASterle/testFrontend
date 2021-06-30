@@ -1,4 +1,5 @@
 import {NgModule} from '@angular/core';
+import {NgbCollapseModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {AppComponent} from './app.component';
@@ -22,9 +23,11 @@ import {ErrorComponent} from './components/error/error.component';
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    NgbCollapseModule,
     AppRoutingModule,
     FilesModule,
-    ImagesModule
+    ImagesModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

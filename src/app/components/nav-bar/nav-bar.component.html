@@ -1,15 +1,8 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">TestFrontend</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-          aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-    <div class="navbar-nav">
-      <a class="nav-item nav-link" href="files">Files</a>
-      <a class="nav-item nav-link" href="images">Images</a>
-    </div>
-  </div>
+<a class="navbar-brand" href="#">TestFrontend</a>
+<nav ngbNav #nav="ngbNav" [activeId]="route.fragment | async" class="nav-tabs">
+  <ng-container [ngbNavItem]="link.fragment" *ngFor="let link of links">
+    <a ngbNavLink routerLink="{{ link.fragment }}" routerLinkActive="active">{{ link.title }}</a>
+  </ng-container>
 </nav>
 <div>
   <router-outlet></router-outlet>

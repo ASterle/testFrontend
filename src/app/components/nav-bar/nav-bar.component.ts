@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-nav-bar',
@@ -6,8 +7,12 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./nav-bar.component.css']
 })
 export class NavBarComponent implements OnInit {
+  links = [
+    {title: 'Files', fragment: 'files'},
+    {title: 'Images', fragment: 'images'}
+  ];
 
-  constructor() {
+  constructor(public route: ActivatedRoute) {
   }
 
   ngOnInit(): void {

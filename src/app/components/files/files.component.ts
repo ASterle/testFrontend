@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {UploadFile} from "../../models/upload-file.model";
-import {FileStorageService} from "../../services/file-storage.service";
+import {UploadService} from "../../services/upload.service";
 import {Observable} from "rxjs";
+import {FileService} from "../../services/file.service";
 
 @Component({
   selector: 'app-files',
@@ -13,8 +14,11 @@ export class FilesComponent implements OnInit {
   public fileNames: Array<String> = [];
   public files$: Observable<UploadFile[]>;
 
-  constructor(private fileService: FileStorageService) {
-    this.files$ = this.fileService.getFiles();
+  private readonly _endpointUrl = "http://localhost:8080/storage";
+
+  constructor(private uploadService: UploadService,
+              private fileService: FileService) {
+    this.files$ = this.uploadService.getFiles(this._endpointUrl);
   }
 
   onFileSelected(event: any) {
@@ -23,10 +27,10 @@ export class FilesComponent implements OnInit {
     if (files.length != 0) {
       for (var file of files) {
         this.fileNames.push(file.name);
-        this.fileService.getBase64(file).then(
-          (data: string) => {
-            let uploadFile: UploadFile[] = [new UploadFile(file.name, data)];
-            this.fileService.uploadFile(JSON.stringify(uploadFile))
+        this.fileService.fileToBase64(file).then(
+          (fileData: string) => {
+            let uploadFile: UploadFile[] = [new UploadFile(file.name, fileData)];
+            this.uploadService.uploadFile(this._endpointUrl, JSON.stringify(uploadFile))
           }
         );
       }

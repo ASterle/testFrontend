@@ -1,1 +1,79 @@
-<p>images works!</p>
+<div class="container-fluid">
+  <div class="row align-items-start">
+    <!--Method-->
+    <form class="col-6" [formGroup]="methodForm">
+      <div>
+        <input id="format" type="radio" value="format" name="methodControl" formControlName="methodControl"
+               (change)="changeMethod($event)">
+        <label for="format">Format</label>
+      </div>
+
+      <div>
+        <input id="color" type="radio" value="color" name="methodControl" formControlName="methodControl"
+               (change)="changeMethod($event)">
+        <label for="color">Color</label>
+      </div>
+
+      <div>
+        <input id="grayscale" type="radio" value="grayscale" name="methodControl"
+               formControlName="methodControl"
+               (change)="changeMethod($event)">
+        <label for="grayscale">Grayscale</label>
+      </div>
+    </form>
+
+    <!--Parameter-->
+    <form [formGroup]="parameterForm" *ngIf="method != undefined">
+      <div class="col-6" *ngIf="method == 'format'">
+        <input id="formatType" type="text" name="formatType" formControlName="parameterControl"
+               (change)="changeFormatType($event)">
+        <label for="formatType">Desired image format</label>
+      </div>
+
+      <div class="col-6" *ngIf="method == 'color'">
+        <div>
+          <mat-slider id="rSlider" [(value)]="rValue" min="0" max="1" step="0.01" thumbLabel></mat-slider>
+          <label for="rSlider">R: </label> {{rValue}}
+        </div>
+        <div>
+          <mat-slider id="gSlider" [(value)]="gValue" min="0" max="1" step="0.01" thumbLabel></mat-slider>
+          <label for="gSlider">G: </label> {{gValue}}
+        </div>
+        <div>
+          <mat-slider id="bSlider" [(value)]="bValue" min="0" max="1" step="0.01" thumbLabel></mat-slider>
+          <label for="bSlider">B: </label> {{bValue}}
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Sliders -->
+  <div class="row align-items-center">
+
+  </div>
+
+  <div class="row align-items-end">
+    <!--Attach-->
+    <div class="col-6">
+      <div class="file-attach" *ngIf="method != undefined">
+        <button mat-button color="primary" class="attach-btn"
+                (click)="fileUpload.click()">
+          <mat-icon>attach_file</mat-icon>
+          Attach file
+        </button>
+      </div>
+
+      <!--Upload and download response-->
+      <div class="file-upload" *ngIf="uploadIsValid()">
+        <button mat-button color="primary" class="attach-btn"
+                (click)="uploadImage()">
+          <mat-icon>cloud_upload</mat-icon>
+          Upload file
+        </button>
+      </div>
+    </div>
+
+    <input type="file" class="file-input" #attachments
+           (change)="onFileSelected($event)" #fileUpload>
+  </div>
+</div>
