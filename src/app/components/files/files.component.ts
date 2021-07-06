@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {UploadFile} from "../../models/upload-file.model";
 import {UploadService} from "../../services/upload.service";
+import {FileMapperService} from "../../services/file-mapper.service";
 import {Observable} from "rxjs";
-import {FileService} from "../../services/file.service";
+import {HttpEvent, HttpEventType} from "@angular/common/http";
 
 @Component({
   selector: 'app-files',
@@ -10,35 +11,75 @@ import {FileService} from "../../services/file.service";
   styleUrls: ['./files.component.css']
 })
 export class FilesComponent implements OnInit {
+  @ViewChild('fileInput') attachment: any;
 
-  public fileNames: Array<String> = [];
-  public files$: Observable<UploadFile[]>;
+  public progress: number = 0;
+
+  public uploadFiles$: Observable<UploadFile[]> | undefined;
+  public toUpload: File[] = [];
 
   private readonly _endpointUrl = "http://localhost:8080/storage";
 
   constructor(private uploadService: UploadService,
-              private fileService: FileService) {
-    this.files$ = this.uploadService.getFiles(this._endpointUrl);
+              private fileService: FileMapperService) {
   }
 
-  onFileSelected(event: any) {
-    let files = event.target.files;
+  uploadFiles() {
+    this.fileService.filesToUploadFiles(this.toUpload).then(uploadFiles => {
+      this.uploadService.uploadFile(this._endpointUrl, JSON.stringify(uploadFiles))
+        .subscribe((event: HttpEvent<any>) => {
+          switch (event.type) {
+            case HttpEventType.Sent:
+              console.log('Request has been made!');
+              this.progress = 1;
+              break;
+            case HttpEventType.ResponseHeader:
+              console.log('Response header has been received!');
+              break;
+            case HttpEventType.UploadProgress:
+              // @ts-ignore
+              this.progress = Math.round(event.loaded / event.total * 100);
+              console.log(`Uploaded! ${this.progress}%`);
+              break;
+            case HttpEventType.Response:
+              console.log('Files successfully uploaded!', event.body);
 
-    if (files.length != 0) {
-      for (var file of files) {
-        this.fileNames.push(file.name);
-        this.fileService.fileToBase64(file).then(
-          (fileData: string) => {
-            let uploadFile: UploadFile[] = [new UploadFile(file.name, fileData)];
-            this.uploadService.uploadFile(this._endpointUrl, JSON.stringify(uploadFile))
+              this.onUploadFinish();
+
+              setTimeout(() => {
+                this.progress = 0;
+              }, 1500);
           }
-        );
-      }
+        })
+    })
+  }
+
+  onFileChanged(event: any) {
+    for (var i = 0; i <= event.target.files.length - 1; i++) {
+      this.toUpload.push(event.target.files[i])
     }
+
+    this.attachment.nativeElement.value = '';
+  }
+
+
+  /**
+   * Delete file from toUpload list at index
+   * @param index
+   */
+  removeSelectedFile(index: number) {
+    this.toUpload.splice(index, 1);
+  }
+
+  onUploadFinish() {
+    this.attachment.nativeElement.value = '';
+    this.toUpload = [];
+    this.uploadFiles$ = this.uploadService.getFiles(this._endpointUrl);
   }
 
 
   ngOnInit(): void {
+    this.uploadFiles$ = this.uploadService.getFiles(this._endpointUrl);
   }
 
 }

@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {UploadService} from "../../services/upload.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {FileService} from "../../services/file.service";
+import {FileMapperService} from "../../services/file-mapper.service";
 
 
 @Component({
@@ -22,7 +22,7 @@ export class ImagesComponent implements OnInit {
   public bValue: number | null;
 
   constructor(private uploadService: UploadService,
-              private fileService: FileService) {
+              private fileService: FileMapperService) {
     this.rValue = 1;
     this.gValue = 1;
     this.bValue = 1;
@@ -55,17 +55,13 @@ export class ImagesComponent implements OnInit {
     }
 
     this.fileService.fileToBase64(this.selectedFile).then(
-      (fileData: string) => {
-        if (this.selectedFile == undefined) {
-          return;
-        }
-
-        let filename = this.selectedFile.name;
+      (fileData: [string, string]) => {
+        let filename = fileData[1];
         if (this.method === "format") {
-          filename = this.selectedFile.name.split(".")[0] + "." + this.parameter?.slice(1);
+          filename = fileData[1].split(".")[0] + "." + this.parameter?.slice(1);
         }
 
-        this.uploadService.uploadFileDownloadResponse(url, fileData, filename);
+        this.uploadService.uploadFileDownloadResponse(url, fileData[0], filename);
       }
     );
   }

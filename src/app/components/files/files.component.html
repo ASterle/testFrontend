@@ -1,16 +1,45 @@
-<input type="file" class="file-input"
-       (change)="onFileSelected($event)" #fileUpload>
+<div class="container-fluid">
 
-<div class="file-upload">
+  <div class="row align-items-start">
+    <ul style="list-style-type: none">
+      <li *ngFor="let uFile of (uploadFiles$ | async)">
+        <h3>{{uFile.fileName}}</h3>
+      </li>
+    </ul>
+  </div>
 
-  <ul class="list-group">
-    <li class="list-group-item col-6" *ngFor="let file of (files$ | async)">
-      {{file.fileName || "No file uploaded yet."}}
-    </li>
-  </ul>
+  <div class="row align-items-center">
+    <div *ngFor="let selected of toUpload;let index = index">
+      <h3>{{selected.name}}</h3>
+      <button mat-button (click)="removeSelectedFile(index)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="row align-items-end">
+    <!-- Progress Bar -->
+    <div class="progress" *ngIf="progress > 0">
+      <div class="progress-bar progress-bar-striped bg-success" role="progressbar" [style.width.%]="progress">
+        Uploading
+      </div>
+    </div>
 
-  <button mat-mini-fab color="primary" class="upload-btn"
-          (click)="fileUpload.click()">
-    <mat-icon>attach_file</mat-icon>
-  </button>
+    <!-- Attach -->
+    <button mat-raised-button (click)="fileInput.click()">
+      <mat-icon>attach_file</mat-icon>
+      Attach files
+    </button>
+
+    <!-- Upload -->
+    <button mat-raised-button (click)="uploadFiles()" *ngIf="toUpload.length != 0">
+      <mat-icon>upload</mat-icon>
+      Upload files
+    </button>
+
+    <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput multiple="true">
+  </div>
 </div>
+
+
+
+

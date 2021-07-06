@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpStatusCode} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {UploadFile} from "../models/upload-file.model";
-import {Observable} from "rxjs";
+import {Observable, Subscription, throwError} from "rxjs";
+import {catchError} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -15,17 +16,16 @@ export class UploadService {
     return this.http.get<UploadFile[]>(url);
   }
 
-  uploadFile(json: string, url: string) {
-    this.http.post<HttpStatusCode>(url, json, {
+  uploadFile(url: string, json: string) {
+    return this.http.post(url, json, {
       headers: {'Content-Type': 'application/json'},
-      observe: 'response'
-    }).subscribe(response => {
-      console.log(response.body)
-    });
+      reportProgress: true,
+      observe: 'events'
+    }).pipe(catchError(this.errorMgmt));
   }
 
-  uploadFileDownloadResponse(url: string, base64: string, filename: string): void {
-    this.http.post(url, base64, {
+  uploadFileDownloadResponse(url: string, base64: string, filename: string): Subscription {
+    return this.http.post(url, base64, {
       headers: {'Content-Type': 'plain/text'},
       responseType: 'blob'
     }).subscribe(response => {
@@ -39,5 +39,18 @@ export class UploadService {
         downloadLink.remove();
       }
     )
+  }
+
+  errorMgmt(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Get client-side error
+      errorMessage = error.error.message;
+    } else {
+      // Get server-side error
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    console.log(errorMessage);
+    return throwError(errorMessage);
   }
 }
