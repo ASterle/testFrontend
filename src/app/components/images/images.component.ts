@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {UploadService} from "../../services/upload.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {UploadService} from "../../services/upload.service";
 import {FileMapperService} from "../../services/file-mapper.service";
 
 

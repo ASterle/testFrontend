@@ -1,5 +1,5 @@
-import { TestBed } from '@angular/core/testing';
-import { AppComponent } from './app.component';
+import {TestBed} from '@angular/core/testing';
+import {AppComponent} from './app.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -22,10 +22,10 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('testFrontend');
   });
 
-  it('should render title', () => {
+  it('should render nav bar', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('testFrontend app is running!');
+    expect(compiled.querySelector('app-nav-bar')).not.toBe(null);
   });
 });

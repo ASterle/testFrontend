@@ -7,15 +7,14 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule} from '@angular/forms'; // <-- NgModel lives here
 import {AppRoutingModule} from './app-routing.module';
 import {FilesModule} from "./components/files/files.module";
-import {NavBarComponent} from './components/nav-bar/nav-bar.component';
 import {ImagesModule} from "./components/images/images.module";
 import {HomeComponent} from './components/home/home.component';
 import {ErrorComponent} from './components/error/error.component';
+import {NavBarModule} from "./components/nav-bar/nav-bar.module";
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavBarComponent,
     HomeComponent,
     ErrorComponent
   ],
@@ -27,6 +26,7 @@ import {ErrorComponent} from './components/error/error.component';
     AppRoutingModule,
     FilesModule,
     ImagesModule,
+    NavBarModule,
     NgbModule
   ],
   providers: [],

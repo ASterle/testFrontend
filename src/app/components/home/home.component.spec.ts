@@ -19,7 +19,13 @@ describe('HomeComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should render content', () => {
+    const compiled = fixture.nativeElement;
+    expect(compiled.querySelector('p').textContent).toContain('TestFrontend application, part of' +
+      ' \"Primerjava frontend in backend testiranja v okolju stalnega testiranja (Continuous testing)\"');
   });
 });
