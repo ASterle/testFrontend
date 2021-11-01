@@ -24,4 +24,9 @@ describe('FilesComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should have "No" button disabled', () => {
+    const btn = fixture.debugElement.nativeElement.querySelector('#upload-btn');
+    expect(btn).toBeFalsy();
+  });
 });
